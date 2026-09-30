@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Идеи — быстрый блокнот</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #f5f7fb;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .app {
+            max-width: 540px;
+            width: 100%;
+            background: #ffffff;
+            border-radius: 28px;
+            padding: 30px 28px 32px;
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.06);
+            border: 1px solid #eef2f8;
+        }
+
+        .app h1 {
+            font-weight: 700;
+            font-size: 1.6rem;
+            color: #0b1120;
+            letter-spacing: -0.3px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 6px;
+        }
+
+        .app h1 span {
+            background: #eef4ff;
+            padding: 2px 12px;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #3a6eff;
+            letter-spacing: 0.3px;
+        }
+
+        .sub {
+            color: #6a7a9a;
+            font-size: 0.9rem;
+            margin-bottom: 22px;
+            border-bottom: 1px solid #f0f4fa;
+            padding-bottom: 16px;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+
+        .input-row input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid #dce2ec;
+            border-radius: 16px;
+            font-size: 0.95rem;
+            background: #f8faff;
+            transition: 0.2s;
+            outline: none;
+            font-family: inherit;
+        }
+
+        .input-row input:focus {
+            border-color: #3a6eff;
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(58, 110, 255, 0.08);
+        }
+
+        .input-row button {
+            padding: 12px 26px;
+            background: #3a6eff;
+            color: #fff;
+            border: none;
+            border-radius: 16px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: 0.2s;
+            white-space: nowrap;
+            font-family: inherit;
+        }
+
+        .input-row button:hover {
+            background: #2a5ae6;
+            transform: translateY(-1px);
+        }
+
+        .list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 6px 0 12px;
+            font-size: 0.8rem;
+            color: #6a7a9a;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+
+        .list-header .count {
+            background: #f0f4fa;
+            padding: 2px 14px;
+            border-radius: 40px;
+            font-size: 0.75rem;
+        }
+
+        .list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .list::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .list::-webkit-scrollbar-thumb {
+            background: #d0d8e6;
+            border-radius: 10px;
+        }
+
+        .item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f8faff;
+            padding: 12px 14px 12px 18px;
+            border-radius: 14px;
+            border: 1px solid #edf2f8;
+            transition: 0.15s;
+        }
+
+        .item:hover {
+            background: #f0f6fe;
+            border-color: #d6e0f0;
+        }
+
+        .item .text {
+            font-size: 0.95rem;
+            color: #121826;
+            word-break: break-word;
+            padding-right: 12px;
+        }
+
+        .item .meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+
+        .item .date {
+            font-size: 0.65rem;
+            color: #8b9ab8;
+            font-weight: 500;
+            letter-spacing: 0.2px;
+        }
+
+        .item .delete-btn {
+            background: none;
+            border: none;
+            color: #b0bedb;
+            font-size: 1.1rem;
+            cursor: pointer;
+            padding: 4px 6px;
+            border-radius: 8px;
+            transition: 0.2s;
+            line-height: 1;
+        }
+
+        .item .delete-btn:hover {
+            color: #f85149;
+            background: #ffe8e8;
+        }
+
+        .empty {
+            text-align: center;
+            color: #9aabcc;
+            padding: 40px 0 20px;
+            font-size: 0.95rem;
+        }
+
+        .empty span {
+            font-size: 2rem;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .footer {
+            margin-top: 18px;
+            font-size: 0.7rem;
+            color: #b0bedb;
+            text-align: center;
+            border-top: 1px solid #f0f4fa;
+            padding-top: 16px;
+            letter-spacing: 0.3px;
+        }
+
+        @media (max-width: 460px) {
+            .app { padding: 20px 16px; }
+            .input-row { flex-direction: column; }
+            .input-row button { width: 100%; justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app">
+        <h1>
+            ⚡ Идеи
+            <span>быстро</span>
+        </h1>
+        <div class="sub">Запиши, не отвлекаясь</div>
+
+        <!-- ввод -->
+        <div class="input-row">
+            <input type="text" id="ideaInput" placeholder="Что пришло в голову…" autofocus>
+            <button id="saveBtn">Сохранить</button>
+        </div>
+
+        <!-- список -->
+        <div class="list-header">
+            <span>Сохранённые</span>
+            <span class="count" id="countDisplay">0</span>
+        </div>
+        <div class="list" id="ideaList">
+            <!-- сюда рендерим -->
+        </div>
+
+        <div class="footer">сохраняется в браузере · by vizik</div>
+    </div>
+
+    <script>
+        (function() {
+            // ========== КЛЮЧ ДЛЯ LOCALSTORAGE ==========
+            const STORAGE_KEY = 'quickIdeas';
+
+            // ========== ДАННЫЕ ==========
+            let ideas = [];
+
+            // ========== DOM ==========
+            const input = document.getElementById('ideaInput');
+            const saveBtn = document.getElementById('saveBtn');
+            const listEl = document.getElementById('ideaList');
+            const countEl = document.getElementById('countDisplay');
+
+            // ========== ЗАГРУЗКА ==========
+            function loadFromStorage() {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                if (raw) {
+                    try {
+                        ideas = JSON.parse(raw);
+                        // проверка, что это массив
+                        if (!Array.isArray(ideas)) ideas = [];
+                    } catch {
+                        ideas = [];
+                    }
+                }
+
+                // если пусто — добавляем две тестовые записи
+                if (ideas.length === 0) {
+                    ideas = [
+                        { id: Date.now() + 1, text: 'Сделать утреннюю зарядку 15 минут', createdAt: new Date().toLocaleString() },
+                        { id: Date.now() + 2, text: 'Написать пост для блога про дизайн', createdAt: new Date().toLocaleString() }
+                    ];
+                    saveToStorage();
+                }
+            }
+
+            // ========== СОХРАНЕНИЕ ==========
+            function saveToStorage() {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(ideas));
+            }
+
+            // ========== РЕНДЕР ==========
+            function render() {
+                // сортировка: свежие сверху
+                const sorted = [...ideas].reverse();
+
+                if (sorted.length === 0) {
+                    listEl.innerHTML = `
+                        <div class="empty">
+                            <span>📭</span>
+                            Нет идей. Напишите что-нибудь!
+                        </div>
+                    `;
+                    countEl.textContent = '0';
+                    return;
+                }
+
+                let html = '';
+                for (const item of sorted) {
+                    html += `
+                        <div class="item" data-id="${item.id}">
+                            <div class="text">${escapeHtml(item.text)}</div>
+                            <div class="meta">
+                                <span class="date">${item.createdAt || ''}</span>
+                                <button class="delete-btn" data-id="${item.id}">✕</button>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                listEl.innerHTML = html;
+                countEl.textContent = ideas.length;
+
+                // вешаем обработчики на кнопки удаления
+                document.querySelectorAll('.delete-btn').forEach(btn => {
+                    btn.addEventListener('click', function(e) {
+                        const id = Number(this.dataset.id);
+                        deleteIdea(id);
+                    });
+                });
+            }
+
+            // ========== БЕЗОПАСНЫЙ HTML ==========
+            function escapeHtml(text) {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
+
+            // ========== ДОБАВЛЕНИЕ ==========
+            function addIdea() {
+                const text = input.value.trim();
+                // ★ ИСПРАВЛЕНИЕ: не сохраняем пустые строки
+                if (text === '') {
+                    input.focus();
+                    input.style.borderColor = '#f85149';
+                    setTimeout(() => input.style.borderColor = '', 600);
+                    return;
+                }
+
+                const newIdea = {
+                    id: Date.now(),
+                    text: text,
+                    createdAt: new Date().toLocaleString()
+                };
+
+                ideas.push(newIdea);
+                saveToStorage();
+                render();
+                input.value = '';
+                input.focus();
+            }
+
+            // ========== УДАЛЕНИЕ ==========
+            function deleteIdea(id) {
+                ideas = ideas.filter(item => item.id !== id);
+                saveToStorage();
+                render();
+            }
+
+            // ========== СОБЫТИЯ ==========
+            saveBtn.addEventListener('click', addIdea);
+
+            input.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    addIdea();
+                }
+            });
+
+            // ========== СТАРТ ==========
+            loadFromStorage();
+            render();
+            input.focus();
+
+        })();
+    </script>
+
+</body>
+</html>
